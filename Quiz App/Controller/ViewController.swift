@@ -15,14 +15,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var falseButton: UIButton!
     @IBOutlet weak var questions: UILabel!
     
-    var questionBank = [["5 + 2 = 9", "False"],
-                        ["9 - 2 = 8", "False"],
-                        ["2 + 3 = 5", "True"],
-                        ["1 - 1 = -1", "False"]]
+    var quizbrain = QuizBrain()
+
+
+  
     
-   
-    
-    var questionNumber = 0
 
 
     override func viewDidLoad() {
@@ -39,9 +36,10 @@ class ViewController: UIViewController {
 
     @objc func updateUI(){
         
-        questions.text = questionBank[questionNumber][0]
+        questions.text = quizbrain.getQuestion()
         trueButton.backgroundColor = UIColor.clear
         falseButton.backgroundColor = UIColor.clear
+        
     }
     
     @IBAction func buttonPressed(_ sender: UIButton) {
@@ -49,23 +47,20 @@ class ViewController: UIViewController {
         
         let userInput = sender.currentTitle!
         
-        if userInput == questionBank[questionNumber][1]{
-           
+        let checkAnswer = quizbrain.checkAnswer(userInput)
+        
+        if checkAnswer {
+            
             sender.backgroundColor = UIColor.green
         }
+        
+
+
         else {
             sender.backgroundColor = UIColor.red
         }
        
-        if questionNumber + 1  < questionBank.count {
-            
-        questionNumber += 1
-            
-        }
-        
-        else {
-            questionNumber = 0
-        }
+        quizbrain.nextQuestion()
         
         Timer.scheduledTimer(timeInterval: 0.4, target: self, selector: #selector(updateUI), userInfo: nil, repeats: true)
     }
